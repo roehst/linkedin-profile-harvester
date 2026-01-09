@@ -165,6 +165,9 @@ The workflow runs when:
 4. **Build extension**: Runs `npm run build` (production mode)
 5. **Get version**: Extracts version from built manifest.json
 6. **Create ZIP**: Packages the `dist/` folder into a ZIP file
+   - Includes only essential extension files (manifest, JS, HTML, icons)
+   - Excludes source maps, LICENSE files, and OS-specific files
+   - Lists package contents for verification
 7. **Create Release**: Publishes a GitHub Release with:
    - Auto-generated release notes
    - Installation instructions
