@@ -35,17 +35,20 @@ export class AiPoweredProfileEnrichmentService {
       try {
         rawText = await DomContentExtractionService.getVisibleText(tabId);
 
+        console.log(`Extracted ${rawText.length} characters from page`);
+
         if (!rawText || rawText.length < 50) {
+          console.log('Raw text sample:', rawText ? rawText.substring(0, 200) : 'none');
           return {
             success: false,
-            error: 'Failed to extract sufficient content from page. Please ensure you are on a LinkedIn profile page.'
+            error: `Failed to extract sufficient content from page. Please ensure you are on a LinkedIn profile page.`
           };
         }
       } catch (error) {
         console.error('DOM extraction error:', error);
         return {
           success: false,
-          error: 'Failed to extract content from page'
+          error: `Failed to extract content from page: ${error instanceof Error ? error.message : 'Unknown error'}`
         };
       }
 

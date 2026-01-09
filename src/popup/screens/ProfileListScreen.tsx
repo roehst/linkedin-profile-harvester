@@ -26,9 +26,15 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
   const [displayProfiles, setDisplayProfiles] = useState(profiles);
+  const isMountedRef = React.useRef(true);
 
   useEffect(() => {
+    isMountedRef.current = true;
     loadProfiles();
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -39,15 +45,20 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
     setLoading(true);
     try {
       const response = await chrome.runtime.sendMessage({ type: 'GET_ALL_PROFILES' });
+      if (!isMountedRef.current) return;
+
       if (response.success) {
         onProfilesLoaded(response.profiles || []);
       } else {
         onError('Failed to load profiles');
       }
     } catch (error) {
+      if (!isMountedRef.current) return;
       onError('Error loading profiles');
     } finally {
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -55,6 +66,8 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
     setHarvesting(true);
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!isMountedRef.current) return;
+
       if (!tabs[0]?.url) {
         onError('No active tab found');
         return;
@@ -66,6 +79,8 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
         tabId: tabs[0].id
       });
 
+      if (!isMountedRef.current) return;
+
       if (response.success) {
         onSuccess('Profile harvested successfully!');
         await loadProfiles();
@@ -73,9 +88,12 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
         onError(response.error || 'Failed to harvest profile');
       }
     } catch (error) {
+      if (!isMountedRef.current) return;
       onError('Error harvesting profile');
     } finally {
-      setHarvesting(false);
+      if (isMountedRef.current) {
+        setHarvesting(false);
+      }
     }
   };
 
@@ -91,6 +109,8 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
         id
       });
 
+      if (!isMountedRef.current) return;
+
       if (response.success) {
         onSuccess('Profile deleted');
         await loadProfiles();
@@ -98,6 +118,7 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
         onError('Failed to delete profile');
       }
     } catch (error) {
+      if (!isMountedRef.current) return;
       onError('Error deleting profile');
     }
   };
@@ -115,15 +136,20 @@ export const ProfileListScreen: React.FC<ProfileListScreenProps> = ({
         query: searchQuery
       });
 
+      if (!isMountedRef.current) return;
+
       if (response.success) {
         setDisplayProfiles(response.profiles || []);
       } else {
         onError('Search failed');
       }
     } catch (error) {
+      if (!isMountedRef.current) return;
       onError('Error searching profiles');
     } finally {
-      setSearching(false);
+      if (isMountedRef.current) {
+        setSearching(false);
+      }
     }
   };
 

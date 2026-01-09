@@ -10,23 +10,23 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Clear messages after 3 seconds
-    if (state.context.errorMessage || state.context.successMessage) {
+    if (state.context?.errorMessage || state.context?.successMessage) {
       const timer = setTimeout(() => {
         send({ type: 'CLEAR_MESSAGES' });
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [state.context.errorMessage, state.context.successMessage, send]);
+  }, [state.context?.errorMessage, state.context?.successMessage, send]);
 
   return (
     <div className="w-full h-[600px] bg-gray-50 flex flex-col">
       {/* Messages */}
-      {state.context.errorMessage && (
+      {state.context?.errorMessage && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 text-sm">
           {state.context.errorMessage}
         </div>
       )}
-      {state.context.successMessage && (
+      {state.context?.successMessage && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 text-sm">
           {state.context.successMessage}
         </div>
@@ -36,7 +36,7 @@ const App: React.FC = () => {
       <div className="flex-1 overflow-hidden">
         {state.matches('profileList') && (
           <ProfileListScreen
-            profiles={state.context.profiles}
+            profiles={state.context?.profiles || []}
             onProfileClick={(profile) => send({ type: 'SHOW_PROFILE_DETAIL', profile })}
             onSettingsClick={() => send({ type: 'SHOW_SETTINGS' })}
             onProfilesLoaded={(profiles) => send({ type: 'LOAD_PROFILES', profiles })}
@@ -56,7 +56,7 @@ const App: React.FC = () => {
           />
         )}
 
-        {state.matches('profileDetail') && state.context.selectedProfile && (
+        {state.matches('profileDetail') && state.context?.selectedProfile && (
           <ProfileDetailScreen
             profile={state.context.selectedProfile}
             onBack={() => send({ type: 'SHOW_PROFILE_LIST' })}
