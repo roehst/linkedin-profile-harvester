@@ -1,9 +1,12 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 
-module.exports = {
-  mode: 'development',
-  devtool: 'inline-source-map',
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === 'production';
+
+  return {
+  mode: argv.mode || 'development',
+  devtool: isProduction ? false : 'inline-source-map',
   entry: {
     popup: './src/popup/index.tsx',
     background: './src/background/index.ts',
@@ -44,4 +47,5 @@ module.exports = {
       ]
     })
   ]
+  };
 };

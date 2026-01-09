@@ -6,7 +6,9 @@
   "scripts": {
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
-    "dev": "webpack --mode development"
+    "dev": "webpack --mode development",
+    "package": "npm run build && npm run zip",
+    "zip": "node scripts/package-release.js"
   },
   "keywords": [],
   "author": "",
