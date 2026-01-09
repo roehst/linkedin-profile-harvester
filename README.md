@@ -86,6 +86,65 @@ The extension will be built into the `dist/` directory.
 - Click the "Delete" button on any profile card
 - Confirm the deletion
 
+## Building a Release
+
+### For End Users
+
+Download the latest release from the [Releases page](https://github.com/YOUR_USERNAME/linkedin-profile-harvester/releases) and follow the [INSTALLATION.md](INSTALLATION.md) guide.
+
+### For Developers
+
+#### Manual Release
+
+To create a release package locally:
+
+```bash
+# Build and package the extension
+npm run package
+```
+
+This will:
+1. Build the extension in production mode
+2. Create a ZIP file in the `releases/` directory
+3. The ZIP file can be distributed to users
+
+#### Automated Release via GitHub Actions
+
+The project includes a GitHub Actions workflow that automatically builds and publishes releases:
+
+**Method 1: Create a Git Tag** (Recommended)
+
+```bash
+# Make sure manifest.json has the correct version number
+# Then create and push a tag:
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The workflow will automatically:
+- Build the extension
+- Create a ZIP package
+- Create a GitHub release with the ZIP file attached
+- Include installation instructions
+
+**Method 2: Manual Trigger**
+
+1. Go to your GitHub repository
+2. Click "Actions" tab
+3. Select "Build and Release" workflow
+4. Click "Run workflow"
+5. Choose the branch and click "Run workflow"
+
+### Version Management
+
+Update the version in [public/manifest.json](public/manifest.json:4) before creating a release:
+
+```json
+{
+  "version": "1.0.0"
+}
+```
+
 ## Development
 
 ### Project Structure
